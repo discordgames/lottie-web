@@ -168,7 +168,7 @@ const FontManager = (function () {
     var fontArr = fontData.list;
     var i;
     var len = fontArr.length;
-    var _pendingFonts = len;
+
     for (i = 0; i < len; i += 1) {
       var shouldLoadFont = true;
       var loadedSelector;
@@ -178,7 +178,6 @@ const FontManager = (function () {
       fontArr[i].sansCase = setUpNode(fontArr[i].fFamily, 'sans-serif');
       if (!fontArr[i].fPath) {
         fontArr[i].loaded = true;
-        _pendingFonts -= 1;
       } else if (fontArr[i].fOrigin === 'p' || fontArr[i].origin === 3) {
         loadedSelector = document.querySelectorAll('style[f-forigin="p"][f-family="' + fontArr[i].fFamily + '"], style[f-origin="3"][f-family="' + fontArr[i].fFamily + '"]');
 
@@ -237,7 +236,7 @@ const FontManager = (function () {
       fontArr[i].cache = {};
       this.fonts.push(fontArr[i]);
     }
-    if (_pendingFonts === 0) {
+    if (len === 0) {
       this.isLoaded = true;
     } else {
       // On some cases even if the font is loaded, it won't load correctly when measuring text on canvas.
