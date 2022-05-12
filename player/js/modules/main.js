@@ -102,6 +102,7 @@ lottie.searchAnimations = searchAnimations;
 lottie.registerAnimation = animationManager.registerAnimation;
 lottie.loadAnimation = loadAnimation;
 lottie.setSubframeRendering = setSubframeRendering;
+lottie.setAnimationsPerFrame = animationManager.setAnimationsPerFrame;
 lottie.resize = animationManager.resize;
 // lottie.start = start;
 lottie.goToAndStop = animationManager.goToAndStop;

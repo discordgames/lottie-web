@@ -2640,7 +2640,7 @@
     var _stopped = true;
     var _isFrozen = false;
     var animationIndex = 0;
-    var animationsPerFrame = 4; // -1 = unlimited
+    var animationsPerFrame = -1; // -1 = unlimited
 
     function removeElement(ev) {
       var i = 0;
@@ -2692,6 +2692,10 @@
       }
 
       return animations;
+    }
+
+    function setAnimationsPerFrame(animations) {
+      animationsPerFrame = animations;
     }
 
     function addPlayingCount() {
@@ -2889,6 +2893,7 @@
     }
 
     moduleOb.registerAnimation = registerAnimation;
+    moduleOb.setAnimationsPerFrame = setAnimationsPerFrame;
     moduleOb.loadAnimation = loadAnimation;
     moduleOb.setSpeed = setSpeed;
     moduleOb.setDirection = setDirection;
@@ -5345,6 +5350,7 @@
   lottie.registerAnimation = animationManager.registerAnimation;
   lottie.loadAnimation = loadAnimation;
   lottie.setSubframeRendering = setSubframeRendering;
+  lottie.setAnimationsPerFrame = animationManager.setAnimationsPerFrame;
   lottie.resize = animationManager.resize; // lottie.start = start;
 
   lottie.goToAndStop = animationManager.goToAndStop;

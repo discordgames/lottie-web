@@ -10,7 +10,7 @@ const animationManager = (function () {
   var _stopped = true;
   var _isFrozen = false;
   var animationIndex = 0;
-  var animationsPerFrame = 4; // -1 = unlimited
+  var animationsPerFrame = -1; // -1 = unlimited
 
   function removeElement(ev) {
     var i = 0;
@@ -53,6 +53,10 @@ const animationManager = (function () {
       animations.push(registeredAnimations[i].animation);
     }
     return animations;
+  }
+
+  function setAnimationsPerFrame(animations) {
+    animationsPerFrame = animations;
   }
 
   function addPlayingCount() {
@@ -231,6 +235,7 @@ const animationManager = (function () {
   }
 
   moduleOb.registerAnimation = registerAnimation;
+  moduleOb.setAnimationsPerFrame = setAnimationsPerFrame;
   moduleOb.loadAnimation = loadAnimation;
   moduleOb.setSpeed = setSpeed;
   moduleOb.setDirection = setDirection;
