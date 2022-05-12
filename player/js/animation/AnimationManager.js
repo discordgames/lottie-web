@@ -9,6 +9,8 @@ const animationManager = (function () {
   var playingAnimationsNum = 0;
   var _stopped = true;
   var _isFrozen = false;
+  var animationIndex = 0;
+  var animationsPerFrame = 4; // -1 = unlimited
 
   function removeElement(ev) {
     var i = 0;
@@ -98,12 +100,17 @@ const animationManager = (function () {
     }
   }
   function resume(nowTime) {
-    var elapsedTime = nowTime - initTime;
-    var i;
-    for (i = 0; i < len; i += 1) {
-      registeredAnimations[i].animation.advanceTime(elapsedTime);
+    const elapsedTime = nowTime - initTime;
+    const animationsToProcess = animationsPerFrame !== -1 ? Math.min(animationsPerFrame, len) : len;
+
+    for (let i = 0; i < animationsToProcess; i += 1) {
+      const index = (i + animationIndex) % len;
+      registeredAnimations[index].animation.advanceTime(elapsedTime, nowTime);
     }
+
+    animationIndex = len ? (animationIndex + animationsToProcess) % len : 0;
     initTime = nowTime;
+
     if (playingAnimationsNum && !_isFrozen) {
       window.requestAnimationFrame(resume);
     } else {

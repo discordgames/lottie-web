@@ -29,6 +29,7 @@ const AnimationItem = function () {
   this.isLoaded = false;
   this.currentFrame = 0;
   this.currentRawFrame = 0;
+  this.currentTime = 0;
   this.firstFrame = 0;
   this.totalFrames = 0;
   this.frameRate = 0;
@@ -478,10 +479,14 @@ AnimationItem.prototype.goToAndPlay = function (value, isFrame, name) {
   this.play();
 };
 
-AnimationItem.prototype.advanceTime = function (value) {
+AnimationItem.prototype.advanceTime = function (elapsed, now) {
   if (this.isPaused === true || this.isLoaded === false) {
     return;
   }
+
+  var value = this.currentTime > 0 ? now - this.currentTime : elapsed;
+  this.currentTime = now;
+
   var nextValue = this.currentRawFrame + value * this.frameModifier;
   var _isComplete = false;
   // Checking if nextValue > totalFrames - 1 for addressing non looping and looping animations.

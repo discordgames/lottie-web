@@ -1683,6 +1683,7 @@
     this.isLoaded = false;
     this.currentFrame = 0;
     this.currentRawFrame = 0;
+    this.currentTime = 0;
     this.firstFrame = 0;
     this.totalFrames = 0;
     this.frameRate = 0;
@@ -2139,11 +2140,13 @@
     this.play();
   };
 
-  AnimationItem.prototype.advanceTime = function (value) {
+  AnimationItem.prototype.advanceTime = function (elapsed, now) {
     if (this.isPaused === true || this.isLoaded === false) {
       return;
     }
 
+    var value = this.currentTime > 0 ? now - this.currentTime : elapsed;
+    this.currentTime = now;
     var nextValue = this.currentRawFrame + value * this.frameModifier;
     var _isComplete = false; // Checking if nextValue > totalFrames - 1 for addressing non looping and looping animations.
     // If animation won't loop, it should stop at totalFrames - 1. If it will loop it should complete the last frame and then loop.
@@ -2500,6 +2503,8 @@
     var playingAnimationsNum = 0;
     var _stopped = true;
     var _isFrozen = false;
+    var animationIndex = 0;
+    var animationsPerFrame = 4; // -1 = unlimited
 
     function removeElement(ev) {
       var i = 0;
@@ -2606,12 +2611,14 @@
 
     function resume(nowTime) {
       var elapsedTime = nowTime - initTime;
-      var i;
+      var animationsToProcess = animationsPerFrame !== -1 ? Math.min(animationsPerFrame, len) : len;
 
-      for (i = 0; i < len; i += 1) {
-        registeredAnimations[i].animation.advanceTime(elapsedTime);
+      for (var i = 0; i < animationsToProcess; i += 1) {
+        var index = (i + animationIndex) % len;
+        registeredAnimations[index].animation.advanceTime(elapsedTime, nowTime);
       }
 
+      animationIndex = len ? (animationIndex + animationsToProcess) % len : 0;
       initTime = nowTime;
 
       if (playingAnimationsNum && !_isFrozen) {
