@@ -2277,12 +2277,13 @@
   };
 
   AnimationItem.prototype.advanceTime = function (elapsed, now) {
+    var value = this.currentTime > 0 ? now - this.currentTime : elapsed;
+    this.currentTime = now;
+
     if (this.isPaused === true || this.isLoaded === false) {
       return;
     }
 
-    var value = this.currentTime > 0 ? now - this.currentTime : elapsed;
-    this.currentTime = now;
     var nextValue = this.currentRawFrame + value * this.frameModifier;
     var _isComplete = false; // Checking if nextValue > totalFrames - 1 for addressing non looping and looping animations.
     // If animation won't loop, it should stop at totalFrames - 1. If it will loop it should complete the last frame and then loop.

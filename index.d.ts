@@ -141,6 +141,10 @@ export type LottiePlayer = {
     setLocationHref(href: string): void;
     setIDPrefix(prefix: string): void;
     updateDocumentData(path: (string|number)[], documentData: TextDocumentData, index: number): void;
+    useWebWorker(value: boolean): void;
+    setSubframeRendering(value: boolean): void;
+    setAnimationsPerFrame(value: number): void;
+
 };
 
 declare const Lottie: LottiePlayer;
