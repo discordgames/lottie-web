@@ -2054,6 +2054,7 @@
       this._idle = true;
       this.trigger('_idle');
       this.audioController.pause();
+      this.currentTime = 0;
     }
   };
 
