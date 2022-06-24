@@ -2035,6 +2035,7 @@
       this.isPaused = false;
       this.trigger('_pause');
       this.audioController.resume();
+      this.currentTime = 0;
 
       if (this._idle) {
         this._idle = false;
