@@ -389,6 +389,7 @@ AnimationItem.prototype.play = function (name) {
     this.isPaused = false;
     this.trigger('_pause');
     this.audioController.resume();
+    this.currentTime = 0;
     if (this._idle) {
       this._idle = false;
       this.trigger('_active');
@@ -406,6 +407,7 @@ AnimationItem.prototype.pause = function (name) {
     this._idle = true;
     this.trigger('_idle');
     this.audioController.pause();
+    this.currentTime = 0;
   }
 };
 

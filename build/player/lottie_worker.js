@@ -2171,6 +2171,7 @@
       this.isPaused = false;
       this.trigger('_pause');
       this.audioController.resume();
+      this.currentTime = 0;
 
       if (this._idle) {
         this._idle = false;
@@ -2190,6 +2191,7 @@
       this._idle = true;
       this.trigger('_idle');
       this.audioController.pause();
+      this.currentTime = 0;
     }
   };
 
@@ -5379,7 +5381,7 @@
   lottie.useWebWorker = setWebWorker;
   lottie.setIDPrefix = setPrefix;
   lottie.__getFactory = getFactory;
-  lottie.version = '5.9.4';
+  lottie.version = '5.9.4.1';
 
   function checkReady() {
     if (document.readyState === 'complete') {
