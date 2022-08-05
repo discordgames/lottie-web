@@ -144,6 +144,7 @@ export type LottiePlayer = {
     useWebWorker(value: boolean): void;
     setSubframeRendering(value: boolean): void;
     setAnimationsPerFrame(value: number): void;
+    setAnimationFramerate(value: number): void;
 
 };
 
