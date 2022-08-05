@@ -11,6 +11,7 @@ const animationManager = (function () {
   var _isFrozen = false;
   var animationIndex = 0;
   var animationsPerFrame = -1; // -1 = unlimited
+  var animationFramerate = 1000 / 60;
 
   function removeElement(ev) {
     var i = 0;
@@ -59,6 +60,10 @@ const animationManager = (function () {
     animationsPerFrame = animations;
   }
 
+  function setAnimationFramerate(framerate) {
+    animationFramerate = 1000 / Math.max(1, Math.min(60, framerate));
+  }
+
   function addPlayingCount() {
     playingAnimationsNum += 1;
     activate();
@@ -105,15 +110,17 @@ const animationManager = (function () {
   }
   function resume(nowTime) {
     const elapsedTime = nowTime - initTime;
-    const animationsToProcess = animationsPerFrame !== -1 ? Math.min(animationsPerFrame, len) : len;
+    if (elapsedTime >= animationFramerate) {
+      const animationsToProcess = animationsPerFrame !== -1 ? Math.min(animationsPerFrame, len) : len;
 
-    for (let i = 0; i < animationsToProcess; i += 1) {
-      const index = (i + animationIndex) % len;
-      registeredAnimations[index].animation.advanceTime(elapsedTime, nowTime);
+      for (let i = 0; i < animationsToProcess; i += 1) {
+        const index = (i + animationIndex) % len;
+        registeredAnimations[index].animation.advanceTime(elapsedTime, nowTime);
+      }
+
+      animationIndex = len ? (animationIndex + animationsToProcess) % len : 0;
+      initTime = nowTime;
     }
-
-    animationIndex = len ? (animationIndex + animationsToProcess) % len : 0;
-    initTime = nowTime;
 
     if (playingAnimationsNum && !_isFrozen) {
       window.requestAnimationFrame(resume);
@@ -236,6 +243,7 @@ const animationManager = (function () {
 
   moduleOb.registerAnimation = registerAnimation;
   moduleOb.setAnimationsPerFrame = setAnimationsPerFrame;
+  moduleOb.setAnimationFramerate = setAnimationFramerate;
   moduleOb.loadAnimation = loadAnimation;
   moduleOb.setSpeed = setSpeed;
   moduleOb.setDirection = setDirection;

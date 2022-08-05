@@ -2643,6 +2643,8 @@
     var animationIndex = 0;
     var animationsPerFrame = -1; // -1 = unlimited
 
+    var animationFramerate = 1000 / 60;
+
     function removeElement(ev) {
       var i = 0;
       var animItem = ev.target;
@@ -2699,6 +2701,10 @@
       animationsPerFrame = animations;
     }
 
+    function setAnimationFramerate(framerate) {
+      animationFramerate = 1000 / Math.max(1, Math.min(60, framerate));
+    }
+
     function addPlayingCount() {
       playingAnimationsNum += 1;
       activate();
@@ -2752,15 +2758,18 @@
 
     function resume(nowTime) {
       var elapsedTime = nowTime - initTime;
-      var animationsToProcess = animationsPerFrame !== -1 ? Math.min(animationsPerFrame, len) : len;
 
-      for (var i = 0; i < animationsToProcess; i += 1) {
-        var index = (i + animationIndex) % len;
-        registeredAnimations[index].animation.advanceTime(elapsedTime, nowTime);
+      if (elapsedTime >= animationFramerate) {
+        var animationsToProcess = animationsPerFrame !== -1 ? Math.min(animationsPerFrame, len) : len;
+
+        for (var i = 0; i < animationsToProcess; i += 1) {
+          var index = (i + animationIndex) % len;
+          registeredAnimations[index].animation.advanceTime(elapsedTime, nowTime);
+        }
+
+        animationIndex = len ? (animationIndex + animationsToProcess) % len : 0;
+        initTime = nowTime;
       }
-
-      animationIndex = len ? (animationIndex + animationsToProcess) % len : 0;
-      initTime = nowTime;
 
       if (playingAnimationsNum && !_isFrozen) {
         window.requestAnimationFrame(resume);
@@ -2895,6 +2904,7 @@
 
     moduleOb.registerAnimation = registerAnimation;
     moduleOb.setAnimationsPerFrame = setAnimationsPerFrame;
+    moduleOb.setAnimationFramerate = setAnimationFramerate;
     moduleOb.loadAnimation = loadAnimation;
     moduleOb.setSpeed = setSpeed;
     moduleOb.setDirection = setDirection;
@@ -5352,6 +5362,7 @@
   lottie.loadAnimation = loadAnimation;
   lottie.setSubframeRendering = setSubframeRendering;
   lottie.setAnimationsPerFrame = animationManager.setAnimationsPerFrame;
+  lottie.setAnimationFramerate = animationManager.setAnimationFramerate;
   lottie.resize = animationManager.resize; // lottie.start = start;
 
   lottie.goToAndStop = animationManager.goToAndStop;
